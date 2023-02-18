@@ -42,7 +42,7 @@ public class Board {
         for (int y = 0; y < 2; y++)
             for (int x = 0; x < BOARD_SIZE; x++) {
                 set(x, y, new Piece(true));
-                set(x, y + 6, new Piece(false));
+                set(x, y + BOARD_SIZE - 2, new Piece(false));
             }
     }
 
