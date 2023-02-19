@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
 
 public class Board {
     // Width and height of each board tile
@@ -46,11 +47,21 @@ public class Board {
             }
     }
 
+    public boolean outOfBounds(int x, int y) {
+        return x < 0 || y < 0 || x >= BOARD_SIZE || y >= BOARD_SIZE;
+    }
+
+    public boolean outOfBounds(BoardCoordinate coordinate) {
+        return outOfBounds(coordinate.x, coordinate.y);
+    }
+
     public Piece get(int x, int y) {
+        if (outOfBounds(x, y)) return null;
         return board[y][x];
     }
 
     public Piece get(BoardCoordinate coordinate) {
+        if (coordinate == null) return null;
         return get(coordinate.x, coordinate.y);
     }
 
@@ -88,12 +99,15 @@ public class Board {
         // Get board coordinate of mouse release
         BoardCoordinate newCoordinate = new ScreenCoordinate(x, y).toBoard();
         // Only do something if new coordinate is different from the originating coordinate
-        if (!dragging.equals(newCoordinate)) {
-            // Get piece on target coordinate
-            Piece capturedPiece = get(newCoordinate);
-            // Only move piece to square if there's nothing there, or they are of differing colors
-            if (capturedPiece == null || capturedPiece.black != get(dragging).black) {
-                move(dragging, newCoordinate);
+        if (dragging != null && !newCoordinate.equals(dragging)) {
+            // dragging is BoardCoordinate of piece being dragged
+            Piece piece = get(dragging);
+            ArrayList<BoardCoordinate> legalMoves = piece.getLegalMoves(dragging, this);
+            for (BoardCoordinate legalMove : legalMoves) {
+                if (newCoordinate.equals(legalMove)) {
+                    move(dragging, newCoordinate);
+                    break;
+                }
             }
         }
         // Clear dragging

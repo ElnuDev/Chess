@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Piece {
     // Width and height of placeholder rectangle graphic
@@ -10,6 +11,37 @@ public class Piece {
 
     public Piece(boolean black) {
         this.black = black;
+    }
+
+    public ArrayList<BoardCoordinate> getPossibleMoves(BoardCoordinate position) {
+        ArrayList<BoardCoordinate> possibleMoves = new ArrayList<>();
+        possibleMoves.add(new BoardCoordinate(position.x - 1, position.y)); // to left
+        possibleMoves.add(new BoardCoordinate(position.x + 1, position.y)); // to right
+        possibleMoves.add(new BoardCoordinate(position.x, position.y - 1)); // to up
+        possibleMoves.add(new BoardCoordinate(position.x, position.y + 1)); // to down
+        return possibleMoves;
+    }
+
+    public ArrayList<BoardCoordinate> getLegalMoves(BoardCoordinate position, Board board) {
+        ArrayList<BoardCoordinate> legalMoves = getPossibleMoves(position);
+        for (int i = 0; i < legalMoves.size(); i++) {
+            BoardCoordinate possibleMove = legalMoves.get(i);
+            Piece targetPiece = board.get(possibleMove);
+            if (
+                    // other piece of same color
+                    (targetPiece != null && targetPiece.black == black) ||
+
+                    // outside of bounds of board
+                    possibleMove.x < 0 ||
+                    possibleMove.y < 0 ||
+                    possibleMove.x >= Board.BOARD_SIZE ||
+                    possibleMove.y >= Board.BOARD_SIZE) {
+                legalMoves.remove(i);
+                i--;
+            }
+            // TODO: puts us into check
+        }
+        return legalMoves;
     }
 
     // The Piece class doesn't store position,
