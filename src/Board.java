@@ -40,11 +40,10 @@ public class Board {
         board = new Piece[BOARD_SIZE][BOARD_SIZE];
 
         // Initialize pieces
-        for (int y = 0; y < 2; y++)
-            for (int x = 0; x < BOARD_SIZE; x++) {
-                set(x, y, new Piece(true));
-                set(x, y + BOARD_SIZE - 2, new Piece(false));
-            }
+        set(1, 0, new Knight(true));
+        set(6, 0, new Knight(true));
+        set(1, 7, new Knight(false));
+        set(6, 7, new Knight(false));
     }
 
     public boolean outOfBounds(int x, int y) {

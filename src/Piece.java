@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Piece {
+public abstract class Piece {
     // Width and height of placeholder rectangle graphic
     public static final int DIMENSION = 32;
     public boolean black;
@@ -13,14 +13,7 @@ public class Piece {
         this.black = black;
     }
 
-    public ArrayList<BoardCoordinate> getPossibleMoves(BoardCoordinate position) {
-        ArrayList<BoardCoordinate> possibleMoves = new ArrayList<>();
-        possibleMoves.add(new BoardCoordinate(position.x - 1, position.y)); // to left
-        possibleMoves.add(new BoardCoordinate(position.x + 1, position.y)); // to right
-        possibleMoves.add(new BoardCoordinate(position.x, position.y - 1)); // to up
-        possibleMoves.add(new BoardCoordinate(position.x, position.y + 1)); // to down
-        return possibleMoves;
-    }
+    public abstract ArrayList<BoardCoordinate> getPossibleMoves(BoardCoordinate position);
 
     public ArrayList<BoardCoordinate> getLegalMoves(BoardCoordinate position, Board board) {
         ArrayList<BoardCoordinate> legalMoves = getPossibleMoves(position);
