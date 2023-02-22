@@ -40,10 +40,28 @@ public class Board {
         board = new Piece[BOARD_SIZE][BOARD_SIZE];
 
         // Initialize pieces
-        set(1, 0, new Knight(true));
-        set(6, 0, new Knight(true));
-        set(1, 7, new Knight(false));
-        set(6, 7, new Knight(false));
+        for(int i = 0; i <= 7; i++){
+            if(i == 0 || i == 7){
+                for(int j = 0; j <= 7; j++){
+                    if(j == 0 || j == 7){
+                        set(j, i, new Rook(i==0));
+                    } else if(j == 1 || j == 6){
+                        set(j, i, new Knight(i==0));
+                    } else if(j == 2 || j == 5){
+                        set(j, i, new Bishop(i==0));
+                    } else if(j == 4){
+                        set(j, i, new Queen(i==0));
+                    } else {
+                        set(j, i, new King(i==0));
+                    }
+                }
+            }
+            if(i == 1 || i == 6){
+                for(int j = 0; j <= 7; j++){
+                    set(j, i, new Pawn(i==1));
+                }
+            }
+        }
     }
 
     public boolean outOfBounds(int x, int y) {
