@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
 public class Queen extends Piece {
-    public Queen(boolean black) {
-        super(black);
+    public Queen(boolean black, DrawingPanel panel) {
+        super(black, panel, "black-queen.png", "white-queen.png");
     }
 
     public ArrayList<BoardCoordinate> getPossibleMoves(BoardCoordinate position) {

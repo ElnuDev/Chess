@@ -1,16 +1,16 @@
 import java.awt.*;
+import java.awt.image.ImageObserver;
 import java.util.ArrayList;
 
 public abstract class Piece {
     // Width and height of placeholder rectangle graphic
-    public static final int DIMENSION = 32;
+    static final int DIMENSION = 48;
+    Image image;
     public boolean black;
 
-    // If no parameter, default to white
-    public Piece() { }
-
-    public Piece(boolean black) {
+    public Piece(boolean black, DrawingPanel panel, String blackImagePath, String whiteImagePath) {
         this.black = black;
+        image = panel.loadImage(black ? blackImagePath : whiteImagePath);
     }
 
     public abstract ArrayList<BoardCoordinate> getPossibleMoves(BoardCoordinate position);
@@ -39,15 +39,11 @@ public abstract class Piece {
 
     // The Piece class doesn't store position,
     // so when drawing we need to be provided this along with a graphics context when drawing
-    public void draw(Graphics graphics, int x, int y) {
-        graphics.setColor(black ? Color.BLACK : Color.WHITE);
-        // Drawing is performed from the top-left corner.
-        // We need the drawn rectangle to be offset by half of the width and height
-        // so it is centered on the provided position.
-        graphics.fillRect(x - DIMENSION / 2, y - DIMENSION / 2, DIMENSION, DIMENSION);
+    public void draw(Graphics graphics, ImageObserver observer, int x, int y) {
+        graphics.drawImage(image, x - DIMENSION / 2, y - DIMENSION / 2, observer);
     }
 
-    public void draw(Graphics graphics, ScreenCoordinate coordinate) {
-        draw(graphics, coordinate.x, coordinate.y);
+    public void draw(Graphics graphics, ImageObserver observer, ScreenCoordinate coordinate) {
+        draw(graphics, observer, coordinate.x, coordinate.y);
     }
 }

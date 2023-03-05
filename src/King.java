@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
 public class King extends Piece {
-    public King(boolean black) {
-        super(black);
+    public King(boolean black, DrawingPanel panel) {
+        super(black, panel, "black-king.png", "white-king.png");
     }
 
     public ArrayList<BoardCoordinate> getPossibleMoves(BoardCoordinate position) {

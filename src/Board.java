@@ -1,5 +1,5 @@
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
+import java.awt.image.ImageObserver;
 import java.util.ArrayList;
 
 public class Board {
@@ -44,21 +44,21 @@ public class Board {
             if(i == 0 || i == 7){
                 for(int j = 0; j <= 7; j++){
                     if(j == 0 || j == 7){
-                        set(j, i, new Rook(i==0));
+                        set(j, i, new Rook(i==0, panel));
                     } else if(j == 1 || j == 6){
-                        set(j, i, new Knight(i==0));
+                        set(j, i, new Knight(i==0, panel));
                     } else if(j == 2 || j == 5){
-                        set(j, i, new Bishop(i==0));
+                        set(j, i, new Bishop(i==0, panel));
                     } else if(j == 4){
-                        set(j, i, new Queen(i==0));
+                        set(j, i, new King(i==0, panel));
                     } else {
-                        set(j, i, new King(i==0));
+                        set(j, i, new Queen(i==0, panel));
                     }
                 }
             }
             if(i == 1 || i == 6){
                 for(int j = 0; j <= 7; j++){
-                    set(j, i, new Pawn(i==1));
+                    set(j, i, new Pawn(i==1, panel));
                 }
             }
         }
@@ -142,10 +142,13 @@ public class Board {
     }
 
     public void draw(ScreenCoordinate mousePosition) {
+
+
+
         // Draw board
-        graphics.setColor(WHITE);
-        graphics.fillRect(0, 0, DIMENSION, DIMENSION);
         graphics.setColor(BLACK);
+        graphics.fillRect(0, 0, DIMENSION, DIMENSION);
+        graphics.setColor(WHITE);
         for (int y = 0; y < BOARD_SIZE; y++)
             for (int x = y % 2; x < BOARD_SIZE; x += 2)
                 graphics.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
@@ -154,7 +157,7 @@ public class Board {
         forEachPiece((boardCoordinate, piece) -> {
             // If piece is the one being dragged, render it at the mouse position
             // Otherwise, render it at the center of the board tile
-            piece.draw(graphics, boardCoordinate.equals(dragging) ? mousePosition : boardCoordinate.toScreen());
+            piece.draw(graphics, panel, boardCoordinate.equals(dragging) ? mousePosition : boardCoordinate.toScreen());
         });
     }
 

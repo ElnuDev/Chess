@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
 public class Bishop extends Piece {
-    public Bishop(boolean black) {
-        super(black);
+    public Bishop(boolean black, DrawingPanel panel) {
+        super(black, panel, "black-bishop.png", "white-bishop.png");
     }
 
     public ArrayList<BoardCoordinate> getPossibleMoves(BoardCoordinate position) {

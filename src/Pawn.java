@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
 public class Pawn extends Piece {
-    public Pawn(boolean black) {
-        super(black);
+    public Pawn(boolean black, DrawingPanel panel) {
+        super(black, panel, "black-pawn.png", "white-pawn.png");
     }
 
     public ArrayList<BoardCoordinate> getPossibleMoves(BoardCoordinate position) {
