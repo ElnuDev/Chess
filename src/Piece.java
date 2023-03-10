@@ -13,10 +13,10 @@ public abstract class Piece {
         image = panel.loadImage(black ? blackImagePath : whiteImagePath);
     }
 
-    public abstract ArrayList<BoardCoordinate> getPossibleMoves(BoardCoordinate position);
+    public abstract ArrayList<BoardCoordinate> getPossibleMoves(BoardCoordinate position, Board board);
 
     public ArrayList<BoardCoordinate> getLegalMoves(BoardCoordinate position, Board board) {
-        ArrayList<BoardCoordinate> legalMoves = getPossibleMoves(position);
+        ArrayList<BoardCoordinate> legalMoves = getPossibleMoves(position, board);
         for (int i = 0; i < legalMoves.size(); i++) {
             BoardCoordinate possibleMove = legalMoves.get(i);
             Piece targetPiece = board.get(possibleMove);
@@ -45,5 +45,16 @@ public abstract class Piece {
 
     public void draw(Graphics graphics, ImageObserver observer, ScreenCoordinate coordinate) {
         draw(graphics, observer, coordinate.x, coordinate.y);
+    }
+
+    void getPossibleMovesInDirection(int dx, int dy, BoardCoordinate position, Board board, ArrayList<BoardCoordinate> possibleMoves) {
+        for (
+                int x = position.x + dx, y = position.y + dy;
+                !board.outOfBounds(x, y);
+                x += dx, y += dy) {
+            BoardCoordinate coordinate = new BoardCoordinate(x, y);
+            possibleMoves.add(coordinate);
+            if (board.get(coordinate) != null) break;
+        }
     }
 }

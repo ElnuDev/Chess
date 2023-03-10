@@ -5,7 +5,7 @@ public class King extends Piece {
         super(black, panel, "black-king.png", "white-king.png");
     }
 
-    public ArrayList<BoardCoordinate> getPossibleMoves(BoardCoordinate position) {
+    public ArrayList<BoardCoordinate> getPossibleMoves(BoardCoordinate position, Board board) {
         ArrayList<BoardCoordinate> possibleMoves = new ArrayList<>();
         possibleMoves.add(new BoardCoordinate(position.x - 1, position.y - 1));
         possibleMoves.add(new BoardCoordinate(position.x - 1, position.y + 1));

@@ -142,9 +142,6 @@ public class Board {
     }
 
     public void draw(ScreenCoordinate mousePosition) {
-
-
-
         // Draw board
         graphics.setColor(BLACK);
         graphics.fillRect(0, 0, DIMENSION, DIMENSION);

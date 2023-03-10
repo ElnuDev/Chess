@@ -5,14 +5,14 @@ public class Bishop extends Piece {
         super(black, panel, "black-bishop.png", "white-bishop.png");
     }
 
-    public ArrayList<BoardCoordinate> getPossibleMoves(BoardCoordinate position) {
+    public ArrayList<BoardCoordinate> getPossibleMoves(BoardCoordinate position, Board board) {
         ArrayList<BoardCoordinate> possibleMoves = new ArrayList<>();
-        for(int i = 1; i <= 7; i++) {
-            possibleMoves.add(new BoardCoordinate(position.x - i, position.y - i));
-            possibleMoves.add(new BoardCoordinate(position.x - i, position.y + i));
-            possibleMoves.add(new BoardCoordinate(position.x + i, position.y - i));
-            possibleMoves.add(new BoardCoordinate(position.x + i, position.y + i));
-        }
+
+        getPossibleMovesInDirection(1, 1, position, board, possibleMoves);
+        getPossibleMovesInDirection(-1, -1, position, board, possibleMoves);
+        getPossibleMovesInDirection(1, -1, position, board, possibleMoves);
+        getPossibleMovesInDirection(-1, 1, position, board, possibleMoves);
+
         return possibleMoves;
     }
 }
