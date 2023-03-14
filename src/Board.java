@@ -24,6 +24,7 @@ public class Board {
     Piece[][] board;
     // The current board coordinate that's being dragged
     BoardCoordinate dragging = null;
+    ArrayList<BoardCoordinate> legalMoves = null;
 
     public Board() {
         // Initialize DrawingPanel
@@ -115,9 +116,11 @@ public class Board {
         // Get board coordinate of mouse click
         BoardCoordinate coordinate = new ScreenCoordinate(x, y).toBoard();
         // If there's no piece there, return
-        if (get(coordinate) == null) return;
+        Piece piece = get(coordinate);
+        if (piece == null) return;
         // Set currently dragging piece to that coordinate
         dragging = coordinate;
+        legalMoves = piece.getLegalMoves(coordinate, this);
         // Redraw with dragging
         draw(x, y);
     }
@@ -164,6 +167,14 @@ public class Board {
         draw(new ScreenCoordinate(mouseX, mouseY));
     }
 
+    void drawRect(int x, int y) {
+        graphics.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+    }
+
+    void drawRect(BoardCoordinate coordinate) {
+        drawRect(coordinate.x, coordinate.y);
+    }
+
     public void draw(ScreenCoordinate mousePosition) {
         // Draw board
         graphics.setColor(BLACK);
@@ -171,7 +182,17 @@ public class Board {
         graphics.setColor(WHITE);
         for (int y = 0; y < BOARD_SIZE; y++)
             for (int x = y % 2; x < BOARD_SIZE; x += 2)
-                graphics.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                drawRect(x, y);
+        if (dragging != null) {
+            graphics.setColor(new Color(0, 128, 0, 128));
+            for (BoardCoordinate legalMove : legalMoves)
+                drawRect(legalMove);
+            BoardCoordinate hovering = mousePosition.toBoard();
+            if (legalMoves.contains(hovering)) {
+                graphics.setColor(get(hovering) == null ? new Color(0, 0, 255, 128) : new Color(255, 0, 0, 128));
+                drawRect(mousePosition.toBoard());
+            }
+        }
 
         // Draw pieces
         forEachPiece((boardCoordinate, piece) -> {
