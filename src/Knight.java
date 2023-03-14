@@ -6,6 +6,10 @@ public class Knight extends Piece {
         super(black, panel, "black-knight.png", "white-knight.png");
     }
 
+    public int getValue() {
+        return 3;
+    }
+
     public ArrayList<BoardCoordinate> getPossibleMoves(BoardCoordinate position, Board board) {
         ArrayList<BoardCoordinate> possibleMoves = new ArrayList<>();
         possibleMoves.add(new BoardCoordinate(position.x - 2, position.y - 1));

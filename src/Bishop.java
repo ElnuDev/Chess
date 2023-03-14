@@ -5,6 +5,10 @@ public class Bishop extends Piece {
         super(black, panel, "black-bishop.png", "white-bishop.png");
     }
 
+    public int getValue() {
+        return 3;
+    }
+
     public ArrayList<BoardCoordinate> getPossibleMoves(BoardCoordinate position, Board board) {
         ArrayList<BoardCoordinate> possibleMoves = new ArrayList<>();
 

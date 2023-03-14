@@ -5,6 +5,10 @@ public class Pawn extends Piece {
         super(black, panel, "black-pawn.png", "white-pawn.png");
     }
 
+    public int getValue() {
+        return 1;
+    }
+
     public ArrayList<BoardCoordinate> getPossibleMoves(BoardCoordinate position, Board board) {
         ArrayList<BoardCoordinate> possibleMoves = new ArrayList<>();
         if (this.black) {

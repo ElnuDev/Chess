@@ -9,6 +9,8 @@ public abstract class Piece {
     Image image;
     public boolean black;
 
+    public abstract int getValue();
+
     public Piece(boolean black, DrawingPanel panel, String blackImagePath, String whiteImagePath) {
         this.black = black;
         image = panel.loadImage(black ? blackImagePath : whiteImagePath);
@@ -48,7 +50,7 @@ public abstract class Piece {
 
     boolean isInCheck(BoardCoordinate from, BoardCoordinate to, Board board) {
         boolean isInCheck = false;
-        Piece captured = board.move(from, to);
+        board.move(from, to);
         outer: for (int y = 0; y < Board.BOARD_SIZE; y++) {
             for (int x = 0; x < Board.BOARD_SIZE; x++) {
                 Piece piece = board.get(x, y);
@@ -63,8 +65,7 @@ public abstract class Piece {
                 }
             }
         }
-        board.move(to, from);
-        board.set(to, captured);
+        board.undoMove();
         return isInCheck;
     }
 

@@ -25,6 +25,9 @@ public class Board {
     // The current board coordinate that's being dragged
     BoardCoordinate dragging = null;
     ArrayList<BoardCoordinate> legalMoves = null;
+    Move lastMove;
+    Piece captured;
+    public boolean isGameOver;
 
     public Board() {
         // Initialize DrawingPanel
@@ -99,15 +102,32 @@ public class Board {
         set(coordinate.x, coordinate.y, piece);
     }
 
-    public Piece move(int fromX, int fromY, int toX, int toY) {
-        Piece captured = get(toX, toY);
+    public void move(int fromX, int fromY, int toX, int toY) {
+        lastMove = new Move(new BoardCoordinate(fromX, fromY), new BoardCoordinate(toX, toY));
+        captured = get(toX, toY);
         set(toX, toY, get(fromX, fromY));
         set(fromX, fromY, null);
-        return captured;
     }
 
-    public Piece move(BoardCoordinate from, BoardCoordinate to) {
-        return move(from.x, from.y, to.x, to.y);
+    public void move(BoardCoordinate from, BoardCoordinate to) {
+        move(from.x, from.y, to.x, to.y);
+    }
+
+    public void move(Move move) {
+        move(move.from, move.to);
+        try {
+            Thread.sleep(500);
+        } catch(InterruptedException e) {
+            e.printStackTrace();
+        }
+        draw();
+    }
+
+    public void undoMove() {
+        if (lastMove == null) return;
+        set(lastMove.from, get(lastMove.to));
+        set(lastMove.to, captured);
+        lastMove = null;
     }
 
     // Mouse down event handler
@@ -117,7 +137,7 @@ public class Board {
         BoardCoordinate coordinate = new ScreenCoordinate(x, y).toBoard();
         // If there's no piece there, return
         Piece piece = get(coordinate);
-        if (piece == null) return;
+        if (piece == null || piece.black) return;
         // Set currently dragging piece to that coordinate
         dragging = coordinate;
         legalMoves = piece.getLegalMoves(coordinate, this);
@@ -132,6 +152,9 @@ public class Board {
         if (dragging != null && !newCoordinate.equals(dragging)) {
             // dragging is BoardCoordinate of piece being dragged
             Piece piece = get(dragging);
+            move(dragging, newCoordinate);
+            move(ChessAI.findBestMove(this));
+            /*
             ArrayList<BoardCoordinate> legalMoves = piece.getLegalMoves(dragging, this);
             for (BoardCoordinate legalMove : legalMoves) {
                 if (newCoordinate.equals(legalMove)) {
@@ -148,10 +171,15 @@ public class Board {
                             break;
                         }
                     }
-                    if (inCheck && oppositeKing.getLegalMoves(oppositeKingPosition, this).size() == 0) System.out.println("Checkmate");
+                    if (inCheck && oppositeKing.getLegalMoves(oppositeKingPosition, this).size() == 0)
+                        isGameOver = true;
+
+
+                    move(ChessAI.findBestMove(this));
                     break;
                 }
             }
+            */
         }
         // Clear dragging
         dragging = null;
@@ -187,10 +215,12 @@ public class Board {
             graphics.setColor(new Color(0, 128, 0, 128));
             for (BoardCoordinate legalMove : legalMoves)
                 drawRect(legalMove);
-            BoardCoordinate hovering = mousePosition.toBoard();
-            if (legalMoves.contains(hovering)) {
-                graphics.setColor(get(hovering) == null ? new Color(0, 0, 255, 128) : new Color(255, 0, 0, 128));
-                drawRect(mousePosition.toBoard());
+            if (mousePosition != null) {
+                BoardCoordinate hovering = mousePosition.toBoard();
+                if (legalMoves.contains(hovering)) {
+                    graphics.setColor(get(hovering) == null ? new Color(0, 0, 255, 128) : new Color(255, 0, 0, 128));
+                    drawRect(mousePosition.toBoard());
+                }
             }
         }
 
@@ -236,5 +266,16 @@ public class Board {
     // });
     public void forEachPiece(PieceActionCoordinate tileAction) {
         forEachPiece((x, y, piece) -> tileAction.forEachTile(new BoardCoordinate(x, y), get(x, y)));
+    }
+
+    public ArrayList<Move> getAllLegalMoves() {
+        ArrayList<Move> allLegalMoves = new ArrayList<>();
+        forEachPiece((from, piece) -> {
+            ArrayList<BoardCoordinate> legalTiles = piece.getLegalMoves(from, this);
+            for (BoardCoordinate to : legalTiles) {
+                allLegalMoves.add(new Move(from, to));
+            }
+        });
+        return allLegalMoves;
     }
 }

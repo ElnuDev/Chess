@@ -5,6 +5,10 @@ public class Rook extends Piece {
         super(black, panel, "black-rook.png", "white-rook.png");
     }
 
+    public int getValue() {
+        return 5;
+    }
+
     public ArrayList<BoardCoordinate> getPossibleMoves(BoardCoordinate position, Board board) {
         ArrayList<BoardCoordinate> possibleMoves = new ArrayList<>();
 
