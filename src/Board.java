@@ -1,6 +1,9 @@
 import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
 
 public class Board {
     // Width and height of each board tile
@@ -25,11 +28,12 @@ public class Board {
     // The current board coordinate that's being dragged
     BoardCoordinate dragging = null;
     ArrayList<BoardCoordinate> legalMoves = null;
-    Move lastMove;
-    Piece captured;
+    Stack<Move> moveHistory;
     public boolean isGameOver;
 
     public Board() {
+        moveHistory = new Stack<>();
+
         // Initialize DrawingPanel
         panel = new DrawingPanel(DIMENSION, DIMENSION);
         graphics = panel.getGraphics();
@@ -103,8 +107,7 @@ public class Board {
     }
 
     public void move(int fromX, int fromY, int toX, int toY) {
-        lastMove = new Move(new BoardCoordinate(fromX, fromY), new BoardCoordinate(toX, toY));
-        captured = get(toX, toY);
+        moveHistory.add(new Move(new BoardCoordinate(fromX, fromY), new BoardCoordinate(toX, toY), get(toX, toY)));
         set(toX, toY, get(fromX, fromY));
         set(fromX, fromY, null);
     }
@@ -114,15 +117,15 @@ public class Board {
     }
 
     public void move(Move move) {
+        if (move == null) return;
         move(move.from, move.to);
-        draw(new ScreenCoordinate(0, 0));
     }
 
     public void undoMove() {
-        if (lastMove == null) return;
+        if (moveHistory.isEmpty()) return;
+        Move lastMove = moveHistory.pop();
         set(lastMove.from, get(lastMove.to));
-        set(lastMove.to, captured);
-        lastMove = null;
+        set(lastMove.to, lastMove.captured);
     }
 
     // Mouse down event handler
@@ -147,9 +150,6 @@ public class Board {
         if (dragging != null && !newCoordinate.equals(dragging)) {
             // dragging is BoardCoordinate of piece being dragged
             Piece piece = get(dragging);
-            move(dragging, newCoordinate);
-            move(ChessAI.findBestMove(this));
-            /*
             ArrayList<BoardCoordinate> legalMoves = piece.getLegalMoves(dragging, this);
             for (BoardCoordinate legalMove : legalMoves) {
                 if (newCoordinate.equals(legalMove)) {
@@ -174,7 +174,6 @@ public class Board {
                     break;
                 }
             }
-            */
         }
         // Clear dragging
         dragging = null;
