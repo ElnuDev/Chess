@@ -56,7 +56,7 @@ public class ChessAI {
         Score score = new Score();
         board.forEachPiece((coordinate, piece) -> {
             if (!piece.black) {
-                score.add(piece.getValue());
+                score.add(-piece.getValue());
             } else {
                 score.add(piece.getValue());
             }
