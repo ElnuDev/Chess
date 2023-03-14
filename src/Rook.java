@@ -7,12 +7,13 @@ public class Rook extends Piece {
 
     public ArrayList<BoardCoordinate> getPossibleMoves(BoardCoordinate position, Board board) {
         ArrayList<BoardCoordinate> possibleMoves = new ArrayList<>();
-        for(int i = 1; i <= 7; i++) {
-            possibleMoves.add(new BoardCoordinate(position.x - i, position.y));
-            possibleMoves.add(new BoardCoordinate(position.x + i, position.y));
-            possibleMoves.add(new BoardCoordinate(position.x, position.y - i));
-            possibleMoves.add(new BoardCoordinate(position.x, position.y + i));
-        }
+
+        getPossibleMovesInDirection(0, 1, position, board, possibleMoves);
+        getPossibleMovesInDirection(0, -1, position, board, possibleMoves);
+        getPossibleMovesInDirection(1, 0, position, board, possibleMoves);
+        getPossibleMovesInDirection(-1, 0, position, board, possibleMoves);
+
+
         return possibleMoves;
     }
 }
