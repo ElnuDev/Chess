@@ -15,6 +15,8 @@ public class Board {
     // Colors are represented in hexadecimal, so we can write the hex literal by prefixing the color code with 0x
     static final Color BLACK = new Color(0x6c595c);
     static final Color WHITE = new Color(0xab9b8e);
+    King blackKing;
+    King whiteKing;
     final DrawingPanel panel;
     final Graphics graphics;
 
@@ -50,7 +52,13 @@ public class Board {
                     } else if(j == 2 || j == 5){
                         set(j, i, new Bishop(i==0, panel));
                     } else if(j == 4){
-                        set(j, i, new King(i==0, panel));
+                        if (i == 0) {
+                            blackKing = new King(true, panel);
+                            set(j, i, blackKing);
+                        } else {
+                            whiteKing = new King(false, panel);
+                            set(j, i, whiteKing);
+                        }
                     } else {
                         set(j, i, new Queen(i==0, panel));
                     }
@@ -90,13 +98,15 @@ public class Board {
         set(coordinate.x, coordinate.y, piece);
     }
 
-    public void move(int fromX, int fromY, int toX, int toY) {
+    public Piece move(int fromX, int fromY, int toX, int toY) {
+        Piece captured = get(toX, toY);
         set(toX, toY, get(fromX, fromY));
         set(fromX, fromY, null);
+        return captured;
     }
 
-    public void move(BoardCoordinate from, BoardCoordinate to) {
-        move(from.x, from.y, to.x, to.y);
+    public Piece move(BoardCoordinate from, BoardCoordinate to) {
+        return move(from.x, from.y, to.x, to.y);
     }
 
     // Mouse down event handler
@@ -123,6 +133,19 @@ public class Board {
             for (BoardCoordinate legalMove : legalMoves) {
                 if (newCoordinate.equals(legalMove)) {
                     move(dragging, newCoordinate);
+                    // QUICK TESTING CODE
+                    Piece movedPiece = get(newCoordinate);
+                    King oppositeKing = movedPiece.black ? whiteKing : blackKing;
+                    BoardCoordinate oppositeKingPosition = null;
+                    boolean inCheck = false;
+                    for (BoardCoordinate move : movedPiece.getLegalMoves(newCoordinate, this)) {
+                        if (get(move) == oppositeKing) {
+                            oppositeKingPosition = move;
+                            inCheck = true;
+                            break;
+                        }
+                    }
+                    if (inCheck && oppositeKing.getLegalMoves(oppositeKingPosition, this).size() == 0) System.out.println("Checkmate");
                     break;
                 }
             }
