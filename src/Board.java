@@ -115,12 +115,7 @@ public class Board {
 
     public void move(Move move) {
         move(move.from, move.to);
-        try {
-            Thread.sleep(500);
-        } catch(InterruptedException e) {
-            e.printStackTrace();
-        }
-        draw();
+        draw(new ScreenCoordinate(0, 0));
     }
 
     public void undoMove() {
@@ -271,6 +266,7 @@ public class Board {
     public ArrayList<Move> getAllLegalMoves() {
         ArrayList<Move> allLegalMoves = new ArrayList<>();
         forEachPiece((from, piece) -> {
+            if (!piece.black) return;
             ArrayList<BoardCoordinate> legalTiles = piece.getLegalMoves(from, this);
             for (BoardCoordinate to : legalTiles) {
                 allLegalMoves.add(new Move(from, to));
