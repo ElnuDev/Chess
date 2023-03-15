@@ -30,12 +30,17 @@ public class Board {
     ArrayList<BoardCoordinate> legalMoves = null;
     Stack<Move> moveHistory;
     public boolean isGameOver;
+    public boolean victor;
+    Image youWin;
+    Image youLose;
 
     public Board() {
         moveHistory = new Stack<>();
 
         // Initialize DrawingPanel
         panel = new DrawingPanel(DIMENSION, DIMENSION);
+        youWin = panel.loadImage("you-win.png");
+        youLose = panel.loadImage("you-lose.png");
         graphics = panel.getGraphics();
 
         // Connect up event handlers
@@ -46,6 +51,11 @@ public class Board {
         });
         panel.onMouseUp(this::handleMouseUp);
 
+        // Initialize board
+        setup();
+    }
+
+    public void setup() {
         // Initialize board
         board = new Piece[BOARD_SIZE][BOARD_SIZE];
 
@@ -131,6 +141,11 @@ public class Board {
     // Mouse down event handler
     // This sets the currently dragging piece
     void handleMouseDown(int x, int y) {
+        if (isGameOver) {
+            isGameOver = false;
+            setup();
+            return;
+        }
         // Get board coordinate of mouse click
         BoardCoordinate coordinate = new ScreenCoordinate(x, y).toBoard();
         // If there's no piece there, return
@@ -154,23 +169,11 @@ public class Board {
             for (BoardCoordinate legalMove : legalMoves) {
                 if (newCoordinate.equals(legalMove)) {
                     move(dragging, newCoordinate);
-                    // QUICK TESTING CODE
-                    Piece movedPiece = get(newCoordinate);
-                    King oppositeKing = movedPiece.black ? whiteKing : blackKing;
-                    BoardCoordinate oppositeKingPosition = null;
-                    boolean inCheck = false;
-                    for (BoardCoordinate move : movedPiece.getLegalMoves(newCoordinate, this)) {
-                        if (get(move) == oppositeKing) {
-                            oppositeKingPosition = move;
-                            inCheck = true;
-                            break;
-                        }
+                    checkForCheckmate();
+                    if (!isGameOver) {
+                        move(ChessAI.findBestMove(this));
+                        checkForCheckmate();
                     }
-                    if (inCheck && oppositeKing.getLegalMoves(oppositeKingPosition, this).size() == 0)
-                        isGameOver = true;
-
-
-                    move(ChessAI.findBestMove(this));
                     break;
                 }
             }
@@ -179,6 +182,23 @@ public class Board {
         dragging = null;
         // Redraw without dragging
         draw();
+    }
+
+    public void checkForCheckmate() {
+        BoardCoordinate movedCoordinate = moveHistory.peek().to;
+        Piece movedPiece = get(movedCoordinate);
+        King oppositeKing = movedPiece.black ? whiteKing : blackKing;
+        BoardCoordinate oppositeKingPosition = null;
+        boolean inCheck = false;
+        for (BoardCoordinate move : movedPiece.getLegalMoves(movedCoordinate, this)) {
+            if (get(move) == oppositeKing) {
+                oppositeKingPosition = move;
+                inCheck = true;
+                break;
+            }
+        }
+        isGameOver = inCheck && oppositeKing.getLegalMoves(oppositeKingPosition, this).size() == 0;
+        victor = movedPiece.black;
     }
 
     public void draw() {
@@ -224,6 +244,11 @@ public class Board {
             // Otherwise, render it at the center of the board tile
             piece.draw(graphics, panel, boardCoordinate.equals(dragging) ? mousePosition : boardCoordinate.toScreen());
         });
+
+        // Draw game over text
+        if (isGameOver) {
+            graphics.drawImage(victor ? youLose : youWin, 0, 0, panel);
+        }
     }
 
     // Functional interfaces for forEachPiece
