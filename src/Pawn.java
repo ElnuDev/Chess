@@ -24,7 +24,7 @@ public class Pawn extends Piece {
             if (board.get(position.x + 1, position.y + 1) != null) {
                 possibleMoves.add(new Move(position, new BoardCoordinate(position.x + 1,position.y + 1)));
             }
-            for (Move move : possibleMoves) move.isPromotion = position.y + 1 == 0;
+            for (Move move : possibleMoves) move.isPromotion = position.y + 1 == Board.BOARD_SIZE - 1;
         } else {
             if (board.get(position.x, position.y - 1) == null) {
                 possibleMoves.add(new Move(position, new BoardCoordinate(position.x, position.y - 1)));
