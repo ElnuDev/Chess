@@ -19,8 +19,8 @@ public class Board {
     static final Color BLACK = new Color(0x6c595c);
     static final Color WHITE = new Color(0x847875);
     static final Color HIGHLIGHT = new Color(0xab9b8e7f, true);
-    static final Color MOVE_HIGHLIGHT = new Color(0xb65c5f);
-    static final Color CAPTURE_HIGHLIGHT = new Color(0xafb381);
+    static final Color MOVE_HIGHLIGHT = new Color(0xafb381);
+    static final Color CAPTURE_HIGHLIGHT = new Color(0xb65c5f);
     King blackKing;
     King whiteKing;
     final DrawingPanel panel;
@@ -274,7 +274,7 @@ public class Board {
                 BoardCoordinate hovering = mousePosition.toBoard();
                 for (Move legalMove : legalMoves) {
                     if (legalMove.to.equals(hovering)) {
-                        graphics.setColor(get(hovering) == null ? CAPTURE_HIGHLIGHT : MOVE_HIGHLIGHT);
+                        graphics.setColor(get(hovering) == null ? MOVE_HIGHLIGHT : CAPTURE_HIGHLIGHT);
                         drawRect(mousePosition.toBoard());
                         break;
                     }
@@ -286,6 +286,10 @@ public class Board {
         forEachPiece((boardCoordinate, piece) -> {
             // If piece is the one being dragged, render it at the mouse position
             // Otherwise, render it at the center of the board tile
+            if (piece instanceof King && piece.isInCheck(this)) {
+                graphics.setColor(CAPTURE_HIGHLIGHT);
+                drawRect(boardCoordinate);
+            }
             piece.draw(graphics, panel, boardCoordinate.equals(dragging) ? mousePosition : boardCoordinate.toScreen());
         });
 
