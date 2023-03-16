@@ -8,6 +8,7 @@ public abstract class Piece {
     static final int DIMENSION = 48;
     Image image;
     public boolean black;
+    public boolean moved = false;
 
     public abstract int getValue();
 
@@ -16,29 +17,29 @@ public abstract class Piece {
         image = panel.loadImage(black ? blackImagePath : whiteImagePath);
     }
 
-    public abstract ArrayList<BoardCoordinate> getPossibleMoves(BoardCoordinate position, Board board);
+    public abstract ArrayList<Move> getPossibleMoves(BoardCoordinate position, Board board);
 
-    public ArrayList<BoardCoordinate> getLegalMoves(BoardCoordinate position, Board board) {
+    public ArrayList<Move> getLegalMoves(BoardCoordinate position, Board board) {
         return getLegalMoves(position, board, true);
     }
 
-    public ArrayList<BoardCoordinate> getLegalMoves(BoardCoordinate position, Board board, boolean doCheckChecks) {
-        ArrayList<BoardCoordinate> legalMoves = getPossibleMoves(position, board);
+    public ArrayList<Move> getLegalMoves(BoardCoordinate position, Board board, boolean doCheckChecks) {
+        ArrayList<Move> legalMoves = getPossibleMoves(position, board);
         for (int i = 0; i < legalMoves.size(); i++) {
-            BoardCoordinate possibleMove = legalMoves.get(i);
-            Piece targetPiece = board.get(possibleMove);
+            Move possibleMove = legalMoves.get(i);
+            Piece targetPiece = board.get(possibleMove.to);
             if (
                     // other piece of same color
                     (targetPiece != null && targetPiece.black == black) ||
 
                     // outside of bounds of board
-                    possibleMove.x < 0 ||
-                    possibleMove.y < 0 ||
-                    possibleMove.x >= Board.BOARD_SIZE ||
-                    possibleMove.y >= Board.BOARD_SIZE ||
+                    possibleMove.to.x < 0 ||
+                    possibleMove.to.y < 0 ||
+                    possibleMove.to.x >= Board.BOARD_SIZE ||
+                    possibleMove.to.y >= Board.BOARD_SIZE ||
 
                     // is in check
-                    (doCheckChecks && isInCheck(new Move(position, possibleMove), board))
+                    (doCheckChecks && isInCheck(new Move(position, possibleMove.to), board))
             ) {
                 legalMoves.remove(i);
                 i--;
@@ -55,9 +56,9 @@ public abstract class Piece {
             for (int x = 0; x < Board.BOARD_SIZE; x++) {
                 Piece piece = board.get(x, y);
                 if (piece == null || piece.black == black) continue;
-                ArrayList<BoardCoordinate> legalMoves = piece.getLegalMoves(new BoardCoordinate(x, y), board, false);
-                for (BoardCoordinate legalMove : legalMoves) {
-                    Piece pieceAtMove = board.get(legalMove);
+                ArrayList<Move> legalMoves = piece.getLegalMoves(new BoardCoordinate(x, y), board, false);
+                for (Move legalMove : legalMoves) {
+                    Piece pieceAtMove = board.get(legalMove.to);
                     if (pieceAtMove instanceof King) {
                         isInCheck = true;
                         break outer;
@@ -79,13 +80,13 @@ public abstract class Piece {
         draw(graphics, observer, coordinate.x, coordinate.y);
     }
 
-    void getPossibleMovesInDirection(int dx, int dy, BoardCoordinate position, Board board, ArrayList<BoardCoordinate> possibleMoves) {
+    void getPossibleMovesInDirection(int dx, int dy, BoardCoordinate position, Board board, ArrayList<Move> possibleMoves) {
         for (
                 int x = position.x + dx, y = position.y + dy;
                 !board.outOfBounds(x, y);
                 x += dx, y += dy) {
             BoardCoordinate coordinate = new BoardCoordinate(x, y);
-            possibleMoves.add(coordinate);
+            possibleMoves.add(new Move(position, coordinate));
             if (board.get(coordinate) != null) break;
         }
     }

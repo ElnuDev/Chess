@@ -27,7 +27,7 @@ public class Board {
     Piece[][] board;
     // The current board coordinate that's being dragged
     BoardCoordinate dragging = null;
-    ArrayList<BoardCoordinate> legalMoves = null;
+    ArrayList<Move> legalMoves = null;
     Stack<Move> moveHistory;
     public boolean isGameOver;
     public boolean victor;
@@ -134,8 +134,14 @@ public class Board {
     public void undoMove() {
         if (moveHistory.isEmpty()) return;
         Move lastMove = moveHistory.pop();
-        set(lastMove.from, get(lastMove.to));
-        set(lastMove.to, lastMove.captured);
+        undoMove(lastMove);
+        undoMove(lastMove.submove);
+    }
+
+    void undoMove(Move move) {
+        if (move == null) return;
+        set(move.from, get(move.to));
+        set(move.to, move.captured);
     }
 
     // Mouse down event handler
@@ -158,6 +164,10 @@ public class Board {
         draw(x, y);
     }
 
+    void setLastMovedPieceAsMoved() {
+        get(moveHistory.peek().to).moved = true;
+    }
+
     void handleMouseUp(int x, int y) {
         // Get board coordinate of mouse release
         BoardCoordinate newCoordinate = new ScreenCoordinate(x, y).toBoard();
@@ -165,13 +175,15 @@ public class Board {
         if (dragging != null && !newCoordinate.equals(dragging)) {
             // dragging is BoardCoordinate of piece being dragged
             Piece piece = get(dragging);
-            ArrayList<BoardCoordinate> legalMoves = piece.getLegalMoves(dragging, this);
-            for (BoardCoordinate legalMove : legalMoves) {
-                if (newCoordinate.equals(legalMove)) {
+            ArrayList<Move> legalMoves = piece.getLegalMoves(dragging, this);
+            for (Move legalMove : legalMoves) {
+                if (newCoordinate.equals(legalMove.to)) {
                     move(dragging, newCoordinate);
+                    setLastMovedPieceAsMoved();
                     checkForCheckmate();
                     if (!isGameOver) {
                         move(ChessAI.findBestMove(this));
+                        setLastMovedPieceAsMoved();
                         checkForCheckmate();
                     }
                     break;
@@ -190,9 +202,9 @@ public class Board {
         King oppositeKing = movedPiece.black ? whiteKing : blackKing;
         BoardCoordinate oppositeKingPosition = null;
         boolean inCheck = false;
-        for (BoardCoordinate move : movedPiece.getLegalMoves(movedCoordinate, this)) {
-            if (get(move) == oppositeKing) {
-                oppositeKingPosition = move;
+        for (Move move : movedPiece.getLegalMoves(movedCoordinate, this)) {
+            if (get(move.to) == oppositeKing) {
+                oppositeKingPosition = move.to;
                 inCheck = true;
                 break;
             }
@@ -238,13 +250,16 @@ public class Board {
                 drawRect(x, y);
         if (dragging != null) {
             graphics.setColor(new Color(0, 128, 0, 128));
-            for (BoardCoordinate legalMove : legalMoves)
-                drawRect(legalMove);
+            for (Move legalMove : legalMoves)
+                drawRect(legalMove.to);
             if (mousePosition != null) {
                 BoardCoordinate hovering = mousePosition.toBoard();
-                if (legalMoves.contains(hovering)) {
-                    graphics.setColor(get(hovering) == null ? new Color(0, 0, 255, 128) : new Color(255, 0, 0, 128));
-                    drawRect(mousePosition.toBoard());
+                for (Move legalMove : legalMoves) {
+                    if (legalMove.to.equals(hovering)) {
+                        graphics.setColor(get(hovering) == null ? new Color(0, 0, 255, 128) : new Color(255, 0, 0, 128));
+                        drawRect(mousePosition.toBoard());
+                        break;
+                    }
                 }
             }
         }
@@ -302,10 +317,8 @@ public class Board {
         ArrayList<Move> allLegalMoves = new ArrayList<>();
         forEachPiece((from, piece) -> {
             if (piece.black != black) return;
-            ArrayList<BoardCoordinate> legalTiles = piece.getLegalMoves(from, this);
-            for (BoardCoordinate to : legalTiles) {
-                allLegalMoves.add(new Move(from, to));
-            }
+            ArrayList<Move> legalTiles = piece.getLegalMoves(from, this);
+            allLegalMoves.addAll(legalTiles);
         });
         return allLegalMoves;
     }

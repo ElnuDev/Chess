@@ -9,8 +9,8 @@ public class Bishop extends Piece {
         return 3;
     }
 
-    public ArrayList<BoardCoordinate> getPossibleMoves(BoardCoordinate position, Board board) {
-        ArrayList<BoardCoordinate> possibleMoves = new ArrayList<>();
+    public ArrayList<Move> getPossibleMoves(BoardCoordinate position, Board board) {
+        ArrayList<Move> possibleMoves = new ArrayList<>();
 
         getPossibleMovesInDirection(1, 1, position, board, possibleMoves);
         getPossibleMovesInDirection(-1, -1, position, board, possibleMoves);

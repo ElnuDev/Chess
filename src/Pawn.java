@@ -9,14 +9,14 @@ public class Pawn extends Piece {
         return 1;
     }
 
-    public ArrayList<BoardCoordinate> getPossibleMoves(BoardCoordinate position, Board board) {
-        ArrayList<BoardCoordinate> possibleMoves = new ArrayList<>();
+    public ArrayList<Move> getPossibleMoves(BoardCoordinate position, Board board) {
+        ArrayList<Move> possibleMoves = new ArrayList<>();
         if (this.black) {
-            possibleMoves.add(new BoardCoordinate(position.x, position.y + 1));
-            if (position.y == 1) possibleMoves.add(new BoardCoordinate(position.x, position.y + 2));
+            possibleMoves.add(new Move(position, new BoardCoordinate(position.x, position.y + 1)));
+            if (!moved) possibleMoves.add(new Move(position, new BoardCoordinate(position.x, position.y + 2)));
         } else {
-            possibleMoves.add(new BoardCoordinate(position.x, position.y - 1));
-            if (position.y == 6) possibleMoves.add(new BoardCoordinate(position.x, position.y - 2));
+            possibleMoves.add(new Move(position, new BoardCoordinate(position.x, position.y - 1)));
+            if (!moved) possibleMoves.add(new Move(position, new BoardCoordinate(position.x, position.y - 2)));
         }
         return possibleMoves;
     }

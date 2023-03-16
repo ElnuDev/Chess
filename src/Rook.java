@@ -9,14 +9,13 @@ public class Rook extends Piece {
         return 5;
     }
 
-    public ArrayList<BoardCoordinate> getPossibleMoves(BoardCoordinate position, Board board) {
-        ArrayList<BoardCoordinate> possibleMoves = new ArrayList<>();
+    public ArrayList<Move> getPossibleMoves(BoardCoordinate position, Board board) {
+        ArrayList<Move> possibleMoves = new ArrayList<>();
 
         getPossibleMovesInDirection(0, 1, position, board, possibleMoves);
         getPossibleMovesInDirection(0, -1, position, board, possibleMoves);
         getPossibleMovesInDirection(1, 0, position, board, possibleMoves);
         getPossibleMovesInDirection(-1, 0, position, board, possibleMoves);
-
 
         return possibleMoves;
     }
