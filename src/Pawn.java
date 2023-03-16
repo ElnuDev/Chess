@@ -13,9 +13,7 @@ public class Pawn extends Piece {
         ArrayList<Move> possibleMoves = new ArrayList<>();
         if (this.black) {
             if (board.get(position.x, position.y + 1) == null) {
-                Move oneForward = new Move(position, new BoardCoordinate(position.x, position.y + 1));
-                oneForward.isPromotion = position.y + 1 == Board.BOARD_SIZE - 1;
-                possibleMoves.add(oneForward);
+                possibleMoves.add(new Move(position, new BoardCoordinate(position.x, position.y + 1)));
                 if (!moved && board.get(position.x, position.y + 2) == null) {
                     possibleMoves.add(new Move(position, new BoardCoordinate(position.x, position.y + 2)));
                 }
@@ -26,12 +24,10 @@ public class Pawn extends Piece {
             if (board.get(position.x + 1, position.y + 1) != null) {
                 possibleMoves.add(new Move(position, new BoardCoordinate(position.x + 1,position.y + 1)));
             }
-
+            for (Move move : possibleMoves) move.isPromotion = position.y + 1 == 0;
         } else {
             if (board.get(position.x, position.y - 1) == null) {
-                Move oneForward = new Move(position, new BoardCoordinate(position.x, position.y - 1));
-                oneForward.isPromotion = position.y - 1 == 0;
-                possibleMoves.add(oneForward);
+                possibleMoves.add(new Move(position, new BoardCoordinate(position.x, position.y - 1)));
                 if (!moved && board.get(position.x, position.y - 2) == null) {
                     possibleMoves.add(new Move(position, new BoardCoordinate(position.x, position.y - 2)));
                 }
@@ -42,6 +38,7 @@ public class Pawn extends Piece {
             if (board.get(position.x + 1, position.y - 1) != null) {
                 possibleMoves.add(new Move(position, new BoardCoordinate(position.x + 1,position.y - 1)));
             }
+            for (Move move : possibleMoves) move.isPromotion = position.y - 1 == 0;
         }
         return possibleMoves;
     }
