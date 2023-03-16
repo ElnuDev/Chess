@@ -227,13 +227,10 @@ public class Board {
         if (inCheck) {
             isGameOver = true;
             for (Move move : getAllLegalMoves(!movedPiece.black)) {
-                move(move);
                 if (!oppositeKing.isInCheck(move, this)) {
                     isGameOver = false;
-                    undoMove();
                     break;
                 }
-                undoMove();
             }
         } else if (getAllLegalMoves(movedPiece.black).isEmpty()) {
             isGameOver = true;
