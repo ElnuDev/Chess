@@ -12,11 +12,32 @@ public class Pawn extends Piece {
     public ArrayList<Move> getPossibleMoves(BoardCoordinate position, Board board) {
         ArrayList<Move> possibleMoves = new ArrayList<>();
         if (this.black) {
-            possibleMoves.add(new Move(position, new BoardCoordinate(position.x, position.y + 1)));
-            if (!moved && board.get(position.x, position.y + 1) == null) possibleMoves.add(new Move(position, new BoardCoordinate(position.x, position.y + 2)));
+            if (board.get(position.x, position.y + 1) == null) {
+                possibleMoves.add(new Move(position, new BoardCoordinate(position.x, position.y + 1)));
+                if (!moved) {
+                    possibleMoves.add(new Move(position, new BoardCoordinate(position.x, position.y + 2)));
+                }
+            }
+            if (board.get(position.x - 1, position.y + 1) != null) {
+                possibleMoves.add(new Move(position, new BoardCoordinate(position.x - 1,position.y + 1)));
+            }
+            if (board.get(position.x + 1, position.y + 1) != null) {
+                possibleMoves.add(new Move(position, new BoardCoordinate(position.x + 1,position.y + 1)));
+            }
+
         } else {
-            possibleMoves.add(new Move(position, new BoardCoordinate(position.x, position.y - 1)));
-            if (!moved && board.get(position.x, position.y - 1) == null) possibleMoves.add(new Move(position, new BoardCoordinate(position.x, position.y - 2)));
+            if (board.get(position.x, position.y - 1) == null) {
+                possibleMoves.add(new Move(position, new BoardCoordinate(position.x, position.y - 1)));
+                if (!moved) {
+                    possibleMoves.add(new Move(position, new BoardCoordinate(position.x, position.y - 2)));
+                }
+            }
+            if (board.get(position.x - 1, position.y - 1) != null) {
+                possibleMoves.add(new Move(position, new BoardCoordinate(position.x - 1,position.y - 1)));
+            }
+            if (board.get(position.x + 1, position.y - 1) != null) {
+                possibleMoves.add(new Move(position, new BoardCoordinate(position.x + 1,position.y - 1)));
+            }
         }
         return possibleMoves;
     }
