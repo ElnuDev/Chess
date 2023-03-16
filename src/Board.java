@@ -189,6 +189,7 @@ public class Board {
     }
 
     void handleMouseUp(int x, int y) {
+        if (aiThinking) return;
         // Get board coordinate of mouse release
         BoardCoordinate newCoordinate = new ScreenCoordinate(x, y).toBoard();
         // Only do something if new coordinate is different from the originating coordinate
