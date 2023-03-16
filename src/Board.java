@@ -30,9 +30,11 @@ public class Board {
     ArrayList<Move> legalMoves = null;
     Stack<Move> moveHistory;
     public boolean isGameOver;
+    public boolean isStalemate;
     public boolean victor;
     Image youWin;
     Image youLose;
+    Image stalemate;
 
     public Board() {
         moveHistory = new Stack<>();
@@ -41,6 +43,7 @@ public class Board {
         panel = new DrawingPanel(DIMENSION, DIMENSION);
         youWin = panel.loadImage("you-win.png");
         youLose = panel.loadImage("you-lose.png");
+        stalemate = panel.loadImage("stalemate.png");
         graphics = panel.getGraphics();
 
         // Connect up event handlers
@@ -160,6 +163,7 @@ public class Board {
     void handleMouseDown(int x, int y) {
         if (isGameOver) {
             isGameOver = false;
+            isStalemate = false;
             setup();
             return;
         }
@@ -231,6 +235,9 @@ public class Board {
                 }
                 undoMove();
             }
+        } else if (getAllLegalMoves(movedPiece.black).isEmpty()) {
+            isGameOver = true;
+            isStalemate = true;
         }
         victor = movedPiece.black;
     }
@@ -284,7 +291,7 @@ public class Board {
 
         // Draw game over text
         if (isGameOver) {
-            graphics.drawImage(victor ? youLose : youWin, 0, 0, panel);
+            graphics.drawImage(isStalemate ? stalemate : (victor ? youLose : youWin), 0, 0, panel);
         }
     }
 

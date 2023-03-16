@@ -7,8 +7,8 @@
    viewBox="0 0 512 512"
    version="1.1"
    id="svg5"
-   sodipodi:docname="you-lose.svg"
-   inkscape:export-filename="you-lose.png"
+   sodipodi:docname="stalemate.svg"
+   inkscape:export-filename="stalemate.png"
    inkscape:export-xdpi="25.4"
    inkscape:export-ydpi="25.4"
    inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
@@ -28,8 +28,8 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="0.3901936"
-     inkscape:cx="786.78891"
-     inkscape:cy="981.56402"
+     inkscape:cx="492.06342"
+     inkscape:cy="1009.7551"
      inkscape:window-width="1920"
      inkscape:window-height="1048"
      inkscape:window-x="1920"
@@ -94,14 +94,14 @@
        y="0" />
     <text
        xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,-72.389152,55.55428)"
+       transform="matrix(0.26458333,0,0,0.26458333,-42.254641,69.177459)"
        id="text950"
-       style="font-size:341.333px;white-space:pre;shape-inside:url(#rect952);display:inline;fill:#3d3d3d;fill-opacity:1;filter:url(#filter1272)"><tspan
+       style="font-size:256px;white-space:pre;shape-inside:url(#rect952);display:inline;fill:#3d3d3d;fill-opacity:1;filter:url(#filter1272)"><tspan
          x="380.73242"
-         y="859.09003"
-         id="tspan1823"><tspan
+         y="782.22594"
+         id="tspan1879"><tspan
            style="font-weight:bold;font-family:Arimo;-inkscape-font-specification:'Arimo Bold';fill:#ffffff"
-           id="tspan1821">YOU LOSE</tspan></tspan></text>
+           id="tspan1877">STALEMATE</tspan></tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:33.8667px;font-family:Arimo;-inkscape-font-specification:'Arimo Bold';fill:#ffffff;fill-opacity:0.75;stroke-width:0.264583"
