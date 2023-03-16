@@ -1,5 +1,5 @@
 public class ChessAI {
-    private static final int MAX_DEPTH = 4;
+    private static final int MAX_DEPTH = 3;
 
     public static Move findBestMove(Board board) {
         int bestScore = Integer.MIN_VALUE;

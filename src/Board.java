@@ -128,7 +128,15 @@ public class Board {
 
     public void move(Move move) {
         if (move == null) return;
-        move(move.from, move.to);
+        // White pieces disappear if new move isn't created, don't know why
+        Move copiedMove = new Move(new BoardCoordinate(move.from.x, move.from.y), new BoardCoordinate(move.to.x, move.to.y), get(move.to.x, move.to.y));
+        copiedMove.submove = move.submove;
+        moveHistory.add(copiedMove);
+        // moveHistory.add(move);
+        set(move.to, get(move.from));
+        set(move.from, null);
+        move(move.submove);
+        if (move.submove != null) moveHistory.pop();
     }
 
     public void undoMove() {
@@ -178,7 +186,7 @@ public class Board {
             ArrayList<Move> legalMoves = piece.getLegalMoves(dragging, this);
             for (Move legalMove : legalMoves) {
                 if (newCoordinate.equals(legalMove.to)) {
-                    move(dragging, newCoordinate);
+                    move(legalMove);
                     setLastMovedPieceAsMoved();
                     checkForCheckmate();
                     if (!isGameOver) {
