@@ -63,6 +63,9 @@ public class Board {
     }
 
     public void setup() {
+        // Clear move history
+        moveHistory.clear();
+
         // Initialize board
         board = new Piece[BOARD_SIZE][BOARD_SIZE];
 
