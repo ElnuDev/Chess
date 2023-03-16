@@ -25,6 +25,7 @@ public class Board {
     King whiteKing;
     final DrawingPanel panel;
     final Graphics graphics;
+    public boolean aiThinking = false;
 
     // The board is a two-dimensional array of nullable pieces
     Piece[][] board;
@@ -170,6 +171,7 @@ public class Board {
             setup();
             return;
         }
+        if (aiThinking) return;
         // Get board coordinate of mouse click
         BoardCoordinate coordinate = new ScreenCoordinate(x, y).toBoard();
         // If there's no piece there, return
@@ -199,12 +201,18 @@ public class Board {
                     move(legalMove);
                     setLastMovedPieceAsMoved();
                     checkForCheckmate();
+                    // Clear dragging
+                    dragging = null;
+                    // Redraw without dragging
+                    draw();
                     if (!isGameOver) {
-                        move(ChessAI.findBestMove(this));
-                        setLastMovedPieceAsMoved();
-                        checkForCheckmate();
+                        try {
+                            ChessAI.move(this);
+                        } catch (Exception e) {
+                            System.out.println(e);
+                        }
+                        return;
                     }
-                    break;
                 }
             }
         }

@@ -1,8 +1,31 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 public class ChessAI {
     private static final int MAX_DEPTH = 3;
+
+    public static FutureTask<Void> move(Board board) {
+        Callable<Void> callable = new Callable<>() {
+            @Override
+            public Void call() throws Exception {
+                board.aiThinking = true;
+                Move move = findBestMove(board);
+                board.move(move);
+                board.setLastMovedPieceAsMoved();
+                board.checkForCheckmate();
+                board.draw();
+                board.aiThinking = false;
+                return null;
+            }
+        };
+        FutureTask<Void> future = new FutureTask<>(callable);
+        Thread thread = new Thread(future);
+        thread.start();
+        return future;
+    }
 
     public static Move findBestMove(Board board) {
         int bestScore = Integer.MIN_VALUE;
