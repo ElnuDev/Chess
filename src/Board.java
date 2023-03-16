@@ -131,9 +131,11 @@ public class Board {
         // White pieces disappear if new move isn't created, don't know why
         Move copiedMove = new Move(new BoardCoordinate(move.from.x, move.from.y), new BoardCoordinate(move.to.x, move.to.y), get(move.to.x, move.to.y));
         copiedMove.submove = move.submove;
+        copiedMove.isPromotion = move.isPromotion;
         moveHistory.add(copiedMove);
         // moveHistory.add(move);
-        set(move.to, get(move.from));
+        Piece movedPiece = get(move.from);
+        set(move.to, move.isPromotion ? new Queen(movedPiece.black, panel) : movedPiece);
         set(move.from, null);
         move(move.submove);
         if (move.submove != null) moveHistory.pop();
@@ -148,7 +150,8 @@ public class Board {
 
     void undoMove(Move move) {
         if (move == null) return;
-        set(move.from, get(move.to));
+        Piece movedPiece = get(move.to);
+        set(move.from, move.isPromotion ? new Pawn(movedPiece.black, panel) : movedPiece);
         set(move.to, move.captured);
     }
 

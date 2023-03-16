@@ -6,6 +6,7 @@ public class Move {
     public Piece captured;
     // e.g. castling, castle move. Done after.
     public Move submove;
+    public boolean isPromotion;
 
     public Move(BoardCoordinate from, BoardCoordinate to) {
         this.from = from;
