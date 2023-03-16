@@ -28,8 +28,8 @@ public class King extends Piece {
                     rightRook instanceof Rook &&
                     !rightRook.moved &&
                     board.get(position.x + 1, position.y) == null &&
-                    board.get(position.x + 2, position.y) == null &&
-                    !isInCheck(board)
+                    board.get(position.x + 2, position.y) == null // &&
+                    // !isInCheck(board)
             ) {
                 // TODO: Does not take into account squares in castling path being threatened
                 Move rightCastle = new Move(position, new BoardCoordinate(position.x + 2, position.y));
@@ -46,8 +46,8 @@ public class King extends Piece {
                     !leftRook.moved &&
                     board.get(position.x - 1, position.y) == null &&
                     board.get(position.x - 2, position.y) == null &&
-                    board.get(position.x - 3, position.y) == null &&
-                    !isInCheck(board)
+                    board.get(position.x - 3, position.y) == null // &&
+                    // !isInCheck(board)
             ) {
                 // TODO: Does not take into account squares in castling path being threatened
                 Move leftCastle = new Move(position, new BoardCoordinate(position.x - 2, position.y));

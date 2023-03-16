@@ -61,7 +61,7 @@ public abstract class Piece {
         outer: for (int y = 0; y < Board.BOARD_SIZE; y++) {
             for (int x = 0; x < Board.BOARD_SIZE; x++) {
                 Piece piece = board.get(x, y);
-                if (piece == null || piece.black == black || piece instanceof King) continue;
+                if (piece == null || piece.black == black) continue;
                 ArrayList<Move> legalMoves = piece.getLegalMoves(new BoardCoordinate(x, y), board, false);
                 for (Move legalMove : legalMoves) {
                     Piece pieceAtMove = board.get(legalMove.to);
