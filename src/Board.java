@@ -17,7 +17,10 @@ public class Board {
     // new Color() takes in an integer representing the color
     // Colors are represented in hexadecimal, so we can write the hex literal by prefixing the color code with 0x
     static final Color BLACK = new Color(0x6c595c);
-    static final Color WHITE = new Color(0xab9b8e);
+    static final Color WHITE = new Color(0x847875);
+    static final Color HIGHLIGHT = new Color(0xab9b8e7f, true);
+    static final Color MOVE_HIGHLIGHT = new Color(0xb65c5f);
+    static final Color CAPTURE_HIGHLIGHT = new Color(0xafb381);
     King blackKing;
     King whiteKing;
     final DrawingPanel panel;
@@ -264,14 +267,14 @@ public class Board {
             for (int x = y % 2; x < BOARD_SIZE; x += 2)
                 drawRect(x, y);
         if (dragging != null) {
-            graphics.setColor(new Color(0, 128, 0, 128));
+            graphics.setColor(HIGHLIGHT);
             for (Move legalMove : legalMoves)
                 drawRect(legalMove.to);
             if (mousePosition != null) {
                 BoardCoordinate hovering = mousePosition.toBoard();
                 for (Move legalMove : legalMoves) {
                     if (legalMove.to.equals(hovering)) {
-                        graphics.setColor(get(hovering) == null ? new Color(0, 0, 255, 128) : new Color(255, 0, 0, 128));
+                        graphics.setColor(get(hovering) == null ? CAPTURE_HIGHLIGHT : MOVE_HIGHLIGHT);
                         drawRect(mousePosition.toBoard());
                         break;
                     }
