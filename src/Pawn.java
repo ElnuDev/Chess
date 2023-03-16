@@ -13,10 +13,10 @@ public class Pawn extends Piece {
         ArrayList<Move> possibleMoves = new ArrayList<>();
         if (this.black) {
             possibleMoves.add(new Move(position, new BoardCoordinate(position.x, position.y + 1)));
-            if (!moved) possibleMoves.add(new Move(position, new BoardCoordinate(position.x, position.y + 2)));
+            if (!moved && board.get(position.x, position.y + 1) == null) possibleMoves.add(new Move(position, new BoardCoordinate(position.x, position.y + 2)));
         } else {
             possibleMoves.add(new Move(position, new BoardCoordinate(position.x, position.y - 1)));
-            if (!moved) possibleMoves.add(new Move(position, new BoardCoordinate(position.x, position.y - 2)));
+            if (!moved && board.get(position.x, position.y - 1) == null) possibleMoves.add(new Move(position, new BoardCoordinate(position.x, position.y - 2)));
         }
         return possibleMoves;
     }
