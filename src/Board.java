@@ -197,7 +197,18 @@ public class Board {
                 break;
             }
         }
-        isGameOver = inCheck && oppositeKing.getLegalMoves(oppositeKingPosition, this).size() == 0;
+        if (inCheck) {
+            isGameOver = true;
+            for (Move move : getAllLegalMoves(!movedPiece.black)) {
+                move(move);
+                if (!oppositeKing.isInCheck(move, this)) {
+                    isGameOver = false;
+                    undoMove();
+                    break;
+                }
+                undoMove();
+            }
+        }
         victor = movedPiece.black;
     }
 
@@ -287,10 +298,10 @@ public class Board {
         forEachPiece((x, y, piece) -> tileAction.forEachTile(new BoardCoordinate(x, y), get(x, y)));
     }
 
-    public ArrayList<Move> getAllLegalMoves() {
+    public ArrayList<Move> getAllLegalMoves(boolean black) {
         ArrayList<Move> allLegalMoves = new ArrayList<>();
         forEachPiece((from, piece) -> {
-            if (!piece.black) return;
+            if (piece.black != black) return;
             ArrayList<BoardCoordinate> legalTiles = piece.getLegalMoves(from, this);
             for (BoardCoordinate to : legalTiles) {
                 allLegalMoves.add(new Move(from, to));

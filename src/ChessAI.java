@@ -5,7 +5,7 @@ public class ChessAI {
         int bestScore = Integer.MIN_VALUE;
         Move bestMove = null;
 
-        for (Move move : board.getAllLegalMoves()) {
+        for (Move move : board.getAllLegalMoves(true)) {
             board.move(move);
             int score = minimax(board, MAX_DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE, false);
             board.undoMove();
@@ -27,7 +27,7 @@ public class ChessAI {
         int score;
         if (maximizingPlayer) {
             score = Integer.MIN_VALUE;
-            for (Move move : board.getAllLegalMoves()) {
+            for (Move move : board.getAllLegalMoves(true)) {
                 board.move(move);
                 score = Math.max(score, minimax(board, depth - 1, alpha, beta, false));
                 board.undoMove();
@@ -38,7 +38,7 @@ public class ChessAI {
             }
         } else {
             score = Integer.MAX_VALUE;
-            for (Move move : board.getAllLegalMoves()) {
+            for (Move move : board.getAllLegalMoves(true)) {
                 board.move(move);
                 score = Math.min(score, minimax(board, depth - 1, alpha, beta, true));
                 board.undoMove();

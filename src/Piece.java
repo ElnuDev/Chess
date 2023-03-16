@@ -38,7 +38,7 @@ public abstract class Piece {
                     possibleMove.y >= Board.BOARD_SIZE ||
 
                     // is in check
-                    (doCheckChecks && isInCheck(position, possibleMove, board))
+                    (doCheckChecks && isInCheck(new Move(position, possibleMove), board))
             ) {
                 legalMoves.remove(i);
                 i--;
@@ -48,16 +48,16 @@ public abstract class Piece {
         return legalMoves;
     }
 
-    boolean isInCheck(BoardCoordinate from, BoardCoordinate to, Board board) {
+    boolean isInCheck(Move move, Board board) {
         boolean isInCheck = false;
-        board.move(from, to);
+        board.move(move);
         outer: for (int y = 0; y < Board.BOARD_SIZE; y++) {
             for (int x = 0; x < Board.BOARD_SIZE; x++) {
                 Piece piece = board.get(x, y);
                 if (piece == null || piece.black == black) continue;
                 ArrayList<BoardCoordinate> legalMoves = piece.getLegalMoves(new BoardCoordinate(x, y), board, false);
-                for (BoardCoordinate move : legalMoves) {
-                    Piece pieceAtMove = board.get(move);
+                for (BoardCoordinate legalMove : legalMoves) {
+                    Piece pieceAtMove = board.get(legalMove);
                     if (pieceAtMove instanceof King) {
                         isInCheck = true;
                         break outer;
