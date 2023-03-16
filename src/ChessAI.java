@@ -6,10 +6,11 @@ public class ChessAI {
 
     public static Move findBestMove(Board board) {
         int bestScore = Integer.MIN_VALUE;
-        Move bestMove = null;
 
         ArrayList<Move> legalMoves = board.getAllLegalMoves(true);
+
         Collections.shuffle(legalMoves);
+        Move bestMove = legalMoves.get(0);
         for (Move move : legalMoves) {
             board.move(move);
             int score = minimax(board, MAX_DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE, false);

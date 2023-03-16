@@ -232,7 +232,7 @@ public class Board {
                     break;
                 }
             }
-        } else if (getAllLegalMoves(movedPiece.black).isEmpty()) {
+        } else if (getAllLegalMoves(!movedPiece.black).isEmpty()) {
             isGameOver = true;
             isStalemate = true;
         }
