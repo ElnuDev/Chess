@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class ChessAI {
     private static final int MAX_DEPTH = 3;
 
@@ -5,7 +8,9 @@ public class ChessAI {
         int bestScore = Integer.MIN_VALUE;
         Move bestMove = null;
 
-        for (Move move : board.getAllLegalMoves(true)) {
+        ArrayList<Move> legalMoves = board.getAllLegalMoves(true);
+        Collections.shuffle(legalMoves);
+        for (Move move : legalMoves) {
             board.move(move);
             int score = minimax(board, MAX_DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE, false);
             board.undoMove();
